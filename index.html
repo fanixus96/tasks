@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css">
+    <title>tasks</title>
+  </head>
+<body>
+  <script>
+  document.addEventListener('DOMContentLoaded', reloadTasks);
+
+  function reloadTasks() {
+    var x  = localStorage.getItem('tasks');
+    var ul = document.getElementById('myUL');
+    ul.innerHTML = '';
+
+    if(x) {
+      var xd = JSON.parse(x);
+      var tasks =  xd;
+    } else {
+      var tasks = [];
+    }
+
+
+      for (var i = 0; i < tasks.length; ++i) {
+        var todoText = xd[i].content;
+        var taskDone = xd[i].done;
+        var idx      = i;
+
+        (function(idx) {
+          var li     = document.createElement('li');
+          var button = document.createElement('button');
+
+          button.innerHTML = 'delete';
+          li.appendChild(document.createTextNode(todoText));
+          ul.appendChild(li);
+          if (taskDone === true) {
+          li.style.textDecoration='line-through';
+          li.style.backgroundColor='green';
+          }
+          li.addEventListener('click', function(e){
+          li.style.textDecoration='line-through';
+          li.style.backgroundColor='green';
+          li.appendChild(button);
+          xd[idx].done=true;
+          localStorage.setItem('tasks', JSON.stringify(tasks));
+          });
+
+          li.appendChild(button);
+          button.addEventListener('click', function (e) {
+
+            tasks.splice(idx, 1);
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            reloadTasks();
+            e.stopPropagation();
+          });
+        })(idx);
+      }
+
+  }
+
+  function newElement() {
+    var x = localStorage.getItem('tasks');
+
+    if(x) {
+      var xd = JSON.parse(x);
+      var tasks =  xd;
+    } else {
+      var tasks = [];
+    }
+
+    var input  = document.getElementById('myInput').value;
+
+     if (!input.length) {
+       alert('You have to write something!');
+     } else {
+       var x = { content: input, done: false }
+       tasks.push(x);
+       localStorage.setItem('tasks', JSON.stringify(tasks));
+       reloadTasks();
+     }
+  };
+
+function doesContain(str) {
+  var searchInput = document.getElementById('search').value;
+  return str.search(searchInput) != -1;
+}
+
+function search() {
+  var tasksContent  = tasks.map(function(a) {return a.content;});
+  var filteredArray = tasksContent.filter(doesContain);
+  if (filteredArray!==""){
+  var z = document.getElementById("myUL")
+  z.innerHTML= "";
+  for (var i = 0; i < filteredArray.length; ++i) {
+    var todoText            = filteredArray[i];
+    var ifilteredArray      = i;
+
+    (function(ifilteredArray) {
+      var ul     = document.getElementById('myUL');
+      var li     = document.createElement('li');
+      var button = document.createElement('button');
+
+      if (tasks[i].done){
+        li.style.textDecoration='line-through';
+        li.style.backgroundColor='green';
+       }
+
+
+      button.innerHTML = 'delete';
+      li.appendChild(document.createTextNode(todoText));
+      ul.appendChild(li);
+      li.addEventListener('click', function(e){
+      li.style.textDecoration='line-through';
+      li.style.backgroundColor='green';
+      li.appendChild(button);
+      tasks.map(function(a) { a.done=true;});
+      localStorage.setItem('tasks', JSON.stringify(tasks));
+      });
+      li.appendChild(button);
+      button.addEventListener('click', function (e) {
+        this.parentNode.parentNode.removeChild(this.parentNode);
+        tasks.splice(idx, 1);
+        localStorage.setItem('tasks', JSON.stringify(tasks));
+      });
+    })(ifilteredArray);
+  }
+}else{z.innerHTML= "There is no task like this!";}
+}
+</script>
+  <div id="myDIV" class="header">
+    <h2>My To Do List</h2>
+    <input type="text" id="myInput" placeholder="Your task" onclick='this.value = "";'>
+    <input type="text" id='search' placeholder="search" onchange=search()>
+    <button onclick="newElement()" class="addBtn">Add</button>
+  </div>
+  <div id='searchdiv'>
+  <ul id="myUL">
+  </div>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,25 @@
+body{
+background-color: #f44336;
+}
+
+.header{
+  background-color: #f44336;
+     padding: 40px 40px;
+     color: white;
+     text-align: center;
+}
+li{
+  background-color: orange;
+}
+li::first-letter{
+  background: yellow;
+  font-size: 200%;
+}
+li:hover {
+    background-color: grey;
+}
+
+ul {
+   list-style: none;
+   text-align: center;
+}
